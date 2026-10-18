@@ -1,0 +1,4227 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#183d2b">
+<title>Bikram Bioscope | Botanical Research Archive</title>
+
+<style>
+:root {
+  --forest:#183d2b;
+  --leaf:#2d704b;
+  --mint:#e9f3eb;
+  --paper:#fbfaf6;
+  --ink:#203128;
+  --muted:#6d7b71;
+  --line:#dce5dc;
+  --gold:#d8b46a;
+}
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.6;
+}
+button,input,select {font:inherit}
+button {cursor:pointer}
+.topbar {
+  background:var(--forest);
+  color:white;
+  padding:14px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.brand {font-size:1.1rem;font-weight:bold}
+.brand span {color:var(--gold)}
+.hero {
+  background:linear-gradient(120deg,#183d2b,#2e6c49,#54845c);
+  color:white;
+  padding:55px 5%;
+}
+.hero-inner {max-width:1100px;margin:auto}
+.eyebrow {
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:.8rem;
+  color:#d8e9d9;
+}
+.hero h1 {
+  font-family:Georgia,serif;
+  font-size:clamp(2.2rem,7vw,4.5rem);
+  line-height:1.1;
+  margin:12px 0;
+}
+.hero p {max-width:650px;color:#e4eee5}
+.searchrow {
+  display:flex;
+  gap:10px;
+  max-width:650px;
+  margin-top:24px;
+}
+.searchrow input {
+  flex:1;
+  min-width:0;
+  padding:14px;
+  border:0;
+  border-radius:10px;
+}
+.searchrow button,.primary {
+  padding:13px 18px;
+  background:var(--gold);
+  color:#2d291d;
+  border:0;
+  border-radius:10px;
+  font-weight:bold;
+}
+.wrap {max-width:1100px;margin:auto;padding:32px 5% 55px}
+.section-head {margin-bottom:18px}
+.section-head h2 {font:700 2rem Georgia,serif;margin:0}
+.section-head p {color:var(--muted);margin:5px 0}
+.navcards {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:13px;
+  margin-bottom:40px;
+}
+.navcard {
+  text-align:left;
+  padding:16px;
+  min-height:140px;
+  background:white;
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-radius:15px;
+}
+.navcard:hover,.navcard.active {
+  background:var(--mint);
+  border-color:var(--leaf);
+}
+.navicon {font-size:1.7rem}
+.navcard h3 {margin:8px 0 3px;font-size:1rem}
+.navcard p {margin:0;color:var(--muted);font-size:.85rem}
+.toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:18px 0;
+}
+.filters {display:flex;gap:8px;flex-wrap:wrap}
+.chip {
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:7px 12px;
+  background:white;
+}
+.chip.active {background:var(--forest);color:white}
+select {padding:9px;border:1px solid var(--line);border-radius:9px}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+.card {
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.cover {
+  height:190px;
+  background:linear-gradient(135deg,#dce9d9,#a7c5a8);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.cover img {width:100%;height:100%;object-fit:cover}
+.placeholder {font-size:3.5rem}
+.card-body {padding:16px;display:flex;flex-direction:column;flex:1}
+.tag {
+  display:inline-block;
+  background:var(--mint);
+  color:#255b3b;
+  border-radius:20px;
+  padding:4px 9px;
+  font-size:.75rem;
+  font-weight:bold;
+  align-self:flex-start;
+}
+.card h3 {font:700 1.25rem Georgia,serif;margin:10px 0 5px}
+.card p {color:var(--muted);font-size:.92rem;flex:1}
+.card-foot {
+  border-top:1px solid #edf1ed;
+  padding-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:.8rem;
+}
+.textbtn {border:0;background:none;color:var(--leaf);font-weight:bold}
+.empty {
+  grid-column:1/-1;
+  text-align:center;
+  padding:30px;
+  border:1px dashed #b8cbb9;
+  border-radius:14px;
+}
+.notice {
+  background:#f1f5ec;
+  border:1px solid #dce8d8;
+  border-radius:12px;
+  padding:15px;
+  margin-top:25px;
+  font-size:.9rem;
+}
+.footer {
+  background:#142f22;
+  color:#d9e6db;
+  padding:28px 5%;
+  text-align:center;
+}
+.footer strong {color:white}
+.modal {
+  position:fixed;
+  inset:0;
+  background:#07160fc9;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:20;
+}
+.modal.open {display:flex}
+.modalbox {
+  width:min(680px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:white;
+  border-radius:17px;
+  padding:22px;
+}
+.modalhead {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+.modalhead h2 {font:700 1.7rem Georgia,serif;margin:8px 0}
+.close {
+  border:0;
+  background:var(--mint);
+  border-radius:50%;
+  width:38px;
+  height:38px;
+  font-size:1.3rem;
+}
+.modalbox dl {
+  display:grid;
+  grid-template-columns:145px 1fr;
+  gap:8px;
+}
+.modalbox dt {font-weight:bold}
+.modalbox dd {margin:0;color:var(--muted)}
+.detail-section {
+  border-top:1px solid var(--line);
+  margin-top:15px;
+  padding-top:13px;
+}
+.detail-section h3 {color:var(--forest);margin:0 0 10px}
+.tax-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.tax-item {background:#f5f8f3;padding:9px;border-radius:8px}
+.tax-item strong {display:block;font-size:.78rem;color:var(--muted)}
+.tax-item span {overflow-wrap:anywhere}
+.character-list {padding-left:22px}
+.character-list li {margin:5px 0}
+.detail-photo {
+  width:100%;
+  max-height:330px;
+  object-fit:contain;
+  margin-top:15px;
+  background:#f3f5f0;
+  border-radius:10px;
+}
+.small {font-size:.8rem;color:var(--muted)}
+@media(max-width:760px) {
+  .navcards {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .topbar small {display:none}
+}
+@media(max-width:480px) {
+  .grid {grid-template-columns:1fr}
+  .searchrow {flex-direction:column}
+  .searchrow button {width:100%}
+  .tax-grid {grid-template-columns:1fr}
+  .modalbox dl {grid-template-columns:1fr;gap:3px}
+  .modalbox dd {margin-bottom:8px}
+}
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-text h1 {
+  max-width: 650px;
+}
+
+.hero-photo {
+  flex: 0 0 200px;
+}
+
+.hero-photo img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+@media (max-width: 650px) {
+  .hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-photo {
+    align-self: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">✿ <span>Bikram Bioscope</span></div>
+  <small>Botanical Research Archive</small>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-text">
+      <div class="eyebrow">Explore · Observe · Document</div>
+
+      <h1>A Growing Archive of Botanical Life</h1>
+
+      <p>Explore specimen photographs, taxonomic details, field observations, study notes and question papers.</p>
+
+      <div class="searchrow">
+        <input id="searchInput" type="search"
+          placeholder="Search fungi, algae, plants, notes...">
+        <button id="searchBtn">Search</button>
+      </div>
+    </div>
+
+    <div class="hero-photo">
+      <img src="images/Bikram.jpeg" alt="Bikram Singha">
+    </div>
+
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section>
+    <div class="section-head">
+      <h2>Explore the Archive</h2>
+      <p>Choose a collection or learning resource.</p>
+    </div>
+
+    <div class="navcards">
+      <button class="navcard active" data-section="all">
+        <span class="navicon">🌿</span>
+        <h3>All Resources</h3>
+        <p>Browse the complete archive</p>
+      </button>
+
+      <button class="navcard" data-section="fungi">
+        <span class="navicon">🍄</span>
+        <h3>Fungi</h3>
+        <p>Fungal photographs and taxonomy</p>
+      </button>
+
+      <button class="navcard" data-section="lichen">
+        <span class="navicon">🌱</span>
+        <h3>Lichen</h3>
+        <p>Lichen morphology and specimens</p>
+      </button>
+
+      <button class="navcard" data-section="algae">
+        <span class="navicon">🧫</span>
+        <h3>Algae</h3>
+        <p>Algal photographs and microscopy</p>
+      </button>
+
+      <button class="navcard" data-section="bryophytes">
+        <span class="navicon">🌿</span>
+        <h3>Bryophytes</h3>
+        <p>Mosses and liverworts</p>
+      </button>
+
+      <button class="navcard" data-section="pteridophytes">
+        <span class="navicon">🌾</span>
+        <h3>Pteridophytes</h3>
+        <p>Ferns and related plants</p>
+      </button>
+
+      <button class="navcard" data-section="gymnosperms">
+        <span class="navicon">🌲</span>
+        <h3>Gymnosperms</h3>
+        <p>Conifers and other groups</p>
+      </button>
+
+      <button class="navcard" data-section="angiosperms">
+        <span class="navicon">🌸</span>
+        <h3>Angiosperms</h3>
+        <p>Flowering plants</p>
+      </button>
+
+      <button class="navcard" data-section="notes">
+        <span class="navicon">📒</span>
+        <h3>Study Notes</h3>
+        <p>Notes, diagrams and practicals</p>
+      </button>
+
+      <button class="navcard" data-section="papers">
+        <span class="navicon">📝</span>
+        <h3>Question Papers</h3>
+        <p>Previous-year and practice questions</p>
+      </button>
+
+      <button class="navcard" data-section="materials">
+        <span class="navicon">📚</span>
+        <h3>Study Materials</h3>
+        <p>PDFs and learning resources</p>
+      </button>
+
+      <button class="navcard" data-section="research">
+        <span class="navicon">🔬</span>
+        <h3>Research & Field Notes</h3>
+        <p>Observations and projects</p>
+      </button>
+
+      <button class="navcard" data-section="about">
+        <span class="navicon">🌱</span>
+        <h3>About</h3>
+        <p>About this archive</p>
+      </button>
+    </div>
+  </section>
+
+  <section id="collection">
+    <div class="section-head">
+      <h2 id="sectionTitle">Latest Additions</h2>
+      <p id="sectionDescription">Explore the botanical collection.</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters" id="filters"></div>
+      <select id="sortSelect" aria-label="Sort resources">
+        <option value="az">Sort: A–Z</option>
+        <option value="za">Sort: Z–A</option>
+        <option value="type">Sort: Category</option>
+      </select>
+    </div>
+
+    <div class="grid" id="resourceGrid"></div>
+
+    <div class="notice">
+      <strong>Note:</strong> This website is student-built for educational purposes and may contain errors or inaccuracies; please verify all information from reliable sources before making any final decisions.
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <strong>Bikram Bioscope</strong>
+  <p>Documenting botanical diversity through observation and learning.</p>
+  <span class="small">A student-built botanical archive</span>
+</footer>
+
+<div class="modal" id="detailModal" role="dialog" aria-modal="true">
+  <div class="modalbox">
+    <div class="modalhead">
+      <div>
+        <span class="tag" id="modalTag">Specimen</span>
+        <h2 id="modalTitle">Specimen title</h2>
+      </div>
+      <button class="close" id="closeModal" aria-label="Close">×</button>
+    </div>
+
+    <p id="modalDescription"></p>
+    <dl id="modalDetails"></dl>
+    <div id="taxonomyDetails"></div>
+    <div id="collectionDetails"></div>
+    <div id="characterDetails"></div>
+    <div id="modalExtra"></div>
+  </div>
+</div>
+
+<script>
+/*
+Add your own specimen records inside the resources array.
+Image files should be stored in the images folder.
+Example: images/F001.jpg
+*/
+
+const resources = [
+
+{
+id:1,
+title:"Spirogyra (italics) at 40x magnification",
+section:"algae",
+type:"photo",
+category:"Green Algae",
+classification:"Chlorophyceae",
+icon:"🧫",
+description:"A filamentous green alga commonly observed in freshwater samples.",
+habitat:"Freshwater ponds and slow-moving water",
+location:"Coochbehar(A.B.N. Seal College), West Bengal",
+date:"19th September, 2026 (16:41 PM)",
+image:"images/A001.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Chlorophyta",
+className:"Chlorophyceae (traditional syllabus placement)",
+order:"Zygnematales",
+family:"Zygnemataceae",
+genus:"Spirogyra (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unbranched filament with spiral chloroplast and pyrenoids.",
+"4) Cell wall composition: inner cellulose, outer pectin.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction occurs by conjugation; gametes are non motile."
+]
+},
+
+{
+id:90,
+title:"Scenedesmus (italics) at 40x magnification",
+section:"algae",
+type:"photo",
+category:"Green Algae",
+classification:"Chlorophyceae",
+icon:"🧫",
+description:"A fixed number of colonial group",
+habitat:"Freshwater ponds and slow-moving water",
+location:"Coochbehar(A.B.N. Seal College), West Bengal",
+date:"19th September, 2026 (16:41 PM)",
+image:"images/A019.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Chlorophyta",
+className:"Chlorophyceae (traditional syllabus placement)",
+order:"Sphaeropleales",
+family:"Scenedesmaceae",
+genus:"Scenedesmus (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Non motile colonial alga.",
+"4) Cell wall composition: mainly cellulose.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction absent reproduction occurs by autospores."
+]
+},
+
+{
+id:92,
+title:"Selenastrum (italics) at 40x magnification",
+section:"algae",
+type:"photo",
+category:"Green Algae",
+classification:"Chlorophyceae",
+icon:"🧫",
+description:"A fixed number of colonial group",
+habitat:"Freshwater ponds and slow-moving water",
+location:"Coochbehar(A.B.N. Seal College), West Bengal",
+date:"19th September, 2026 (16:41 PM)",
+image:"images/A021.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Chlorophyta",
+className:"Chlorophyceae (traditional syllabus placement)",
+order:"Sphaeropleales",
+family:"Selenastraceae",
+genus:"Selenastrum (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Non motile colonial alga.",
+"4) Cell wall composition: mainly cellulose.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction absent reproduction occurs by autospores."
+]
+},
+
+{
+id:59,
+title:"Oedogonium (italics) at 40x magnification",
+section:"algae",
+type:"photo",
+category:"Green Algae",
+classification:"Chlorophyceae",
+icon:"🧫",
+description:"A filamentous green alga commonly observed in freshwater samples.",
+habitat:"Freshwater ponds and slow-moving water",
+location:"Coochbehar(A.B.N. Seal College), West Bengal",
+date:"08th October, 2026 (19:38 PM)",
+image:"images/A002.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Chlorophyta",
+className:"Chlorophyceae (traditional syllabus placement)",
+order:"Oedogoniales",
+family:"Oedogoniaceae",
+genus:"Oedogonium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-08",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unbranched filament with Cylindrical cells.",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: Present in zoospore and male gamete.",
+"6) Eyespot: Present in zoospores.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Oogamous, male anthridium produce anthrozoids and oogonia contain eggs."
+]
+},
+
+{
+id:2,
+title:"Pinnate Diatom 001",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:20 AM)",
+image:"images/A009.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:61,
+title:"Pinnate Diatom 002",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:23 AM)",
+image:"images/A010.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:62,
+title:"Pinnate Diatom 003",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:25 AM)",
+image:"images/A011.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:63,
+title:"Pinnate Diatom 004",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:27 AM)",
+image:"images/A012.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:64,
+title:"Pinnate Diatom 005",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:28 AM)",
+image:"images/A013.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:65,
+title:"Pinnate Diatom 006",
+section:"algae",
+type:"photo",
+category:"Diatoms",
+classification:"Bacillariophyceae",
+icon:"🔬",
+description:"Microscopic photosynthetic organisms characterized by silica cell walls.",
+habitat:"Freshwater or marine habitats",
+location:"Coochbehar, West Bengal.",
+date:"29th September 2026 (00:30 AM)",
+image:"images/A014.jpeg",
+taxonomicDetails:{
+kingdom:"Classification dependent",
+division:"Bacillariophyta",
+className:"Bacillariophyceae",
+order:"Naviculales",
+family:"Naviculaceae",
+genus:"Navicula",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Microscopic unicellular or colonial organism",
+"Silica cell wall called a frustule",
+"Valve shape and striae may assist identification"
+]
+},
+
+{
+id:3,
+title:"Nostoc (italics) 40X microscopic view",
+section:"algae",
+type:"photo",
+category:"Cyanobacteria",
+classification:"Cyanophyceae",
+icon:"🧫",
+description:"Nostoc is a Cyanobacteria contain heterocyst, often form jelly like covering ",
+habitat:"Fresh water algae",
+location:"Coochbehar(A.B.N Seal College), West Bengal.",
+date:"28th September, 2026 (16:54 PM)",
+image:"images/A003.jpeg",
+taxonomicDetails:{
+kingdom:"Bacteria in modern classification",
+division:"Cyanobacteriota",
+className:"Cyanophyceae (traditional syllabus)",
+order:"Nostocales",
+family:"Nostocaceae",
+genus:"Nostoc (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-28",
+identifyingCharacters:[
+"1) Colour: Blue-green to olive-green.",
+"2) Habitat: Freshwater ponds, lakes and moist soils.",
+"3) Cell structure: Prokaryotic; filamentous colonies with bead like cells embedded in a gelatinous matrix; may contain heterocyst.",
+"4) Cell wall composition: peptidoglycan.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a.",
+"8) Other pigments: Carotene, phycocyanin and phycoerythrin.",
+"9) Nucleus: True nucleus absent.",
+"10) Stored food: Cyanophycean Starch.",
+"11) Sexuality: Sexual reproduction absent ; reprorduction occurs by fragmentation, hormogonia and akinates."
+]
+},
+
+{
+id:87,
+title:"Anabaena (italics) 40X microscopic view",
+section:"algae",
+type:"photo",
+category:"Cyanobacteria",
+classification:"Cyanophyceae",
+icon:"🧫",
+description:"Anabaena is a Cyanobacteria contain heterocyst",
+habitat:"Fresh water algae",
+location:"Coochbehar(A.B.N Seal College), West Bengal.",
+date:"28th September, 2026 (16:54 PM)",
+image:"images/A016.jpeg",
+taxonomicDetails:{
+kingdom:"Bacteria in modern classification",
+division:"Cyanobacteriota",
+className:"Cyanophyceae (traditional syllabus)",
+order:"Nostocales",
+family:"Nostocaceae",
+genus:"Anabaena (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-28",
+identifyingCharacters:[
+"1) Colour: Blue-green to olive-green.",
+"2) Habitat: Freshwater ponds, lakes and moist soils.",
+"3) Cell structure: Prokaryotic; filamentous colonies; may contain heterocyst.",
+"4) Cell wall composition: peptidoglycan.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a.",
+"8) Other pigments: Carotene, phycocyanin and phycoerythrin.",
+"9) Nucleus: True nucleus absent.",
+"10) Stored food: Cyanophycean Starch.",
+"11) Sexuality: Sexual reproduction absent ; reprorduction occurs by fragmentation, hormogonia and akinates."
+]
+},
+
+{
+id:60,
+title:"Oscillatoria (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Cyanobacteria",
+classification:"Cyanophyceae",
+icon:"🧫",
+description:"Oscillatoria is a Cyanobacteria that lacks heterocyst",
+habitat:"Fresh water algae",
+location:"Coochbehar(A.B.N Seal College), West Bengal.",
+date:"25th September, 2026 (15:10 PM)",
+image:"images/A004.jpeg",
+taxonomicDetails:{
+kingdom:"Bacteria in modern classification",
+division:"Cyanobacteriota",
+className:"Cyanophyceae (traditional syllabus)",
+order:"Oscillatoriales",
+family:"Oscillatoriaceae",
+genus:"Oscillatoria (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-28",
+identifyingCharacters:[
+"1) Colour: Blue-green to olive-green.",
+"2) Habitat: Freshwater ponds, lakes and moist soils.",
+"3) Cell structure: Unbranched; filamentous.",
+"4) Cell wall composition: peptidoglycan.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a.",
+"8) Other pigments: Carotene, phycocyanin and phycoerythrin.",
+"9) Nucleus: True nucleus absent.",
+"10) Stored food: Cyanophycean Starch.",
+"11) Sexuality: Sexual reproduction absent ; reprorduction occurs by fragmentation and hormogonia."
+]
+},
+
+{
+id:86,
+title:"Microcystis (italics) 10x microscopic view",
+section:"algae",
+type:"photo",
+category:"Cyanobacteria",
+classification:"Cyanophyceae",
+icon:"🧫",
+description:"It is a irregular elongated and clumpy colonial form composed of thousands minute individual spherical cells",
+habitat:"Fresh water algae",
+location:"Coochbehar(A.B.N Seal College), West Bengal.",
+date:"26th September, 2026 (14:10 PM)",
+image:"images/A015.jpeg",
+taxonomicDetails:{
+kingdom:"Bacteria in modern classification",
+division:"Cyanobacteriota",
+className:"Cyanophyceae (traditional syllabus)",
+order:"Chroococcales",
+family:"Microcystaceae",
+genus:"Microcystis (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-26",
+identifyingCharacters:[
+"1) Colour: Blue-green.",
+"2) Habitat: Freshwater ponds, lakes and moist soils.",
+"3) Cell structure: Unicellular, coccoid cells arranged in gelatinous colonies.",
+"4) Cell wall composition: peptidoglycan.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a.",
+"8) Other pigments: phycocyanin and phycoerythrin.",
+"9) Nucleus: True nucleus absent.",
+"10) Stored food: Cyanophycean Starch.",
+"11) Sexuality: Sexual reproduction absent ; reprorduction occurs by fragmentation."
+]
+},
+
+{
+id:4,
+title:"Chara (italics) 10x microscopic view",
+section:"algae",
+type:"photo",
+category:"Charophyte Algae",
+classification:"Charophyceae",
+icon:"🌿",
+description:"Chara is closest living relatives(progenote) of land plant, it has nodes and internodes, root like structure, female sex organ multicellular and jackted(made up with sterile cells).",
+habitat:"Freshwater",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"6th october, 2026 (12.40 PM)",
+image:"images/A005.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Charophyta",
+className:"Charophyceae",
+order:"Charales",
+family:"Characeae",
+genus:"Chara (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-06",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Multicellular, branched plant like thallus with distinct nodes and internodes.",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: 2 equal whiplash type flagella in male gamete.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Oogamous, Male part Globule: anthridium produce anthrozoids; Female part Nucule: oogonium contain the egg."
+]
+},
+
+{
+id:88,
+title:"Cosmarium (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Charophyte Algae",
+classification:"Charophyceae",
+icon:"🌿",
+description:"Unicellular freshwater green alga",
+habitat:"Freshwater",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"6th october, 2026 (12.40 PM)",
+image:"images/A017.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Charophyta",
+className:"Zygnematophyceae",
+order:"Desmidiales",
+family:"Desmidiaceae",
+genus:"Cosmarium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-06",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unicellular, with two semicells joined by a narrow isthmus..",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: Absent",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction by conjugation , forming zygospore."
+]
+},
+
+{
+id:89,
+title:"Cosmarium (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Charophyte Algae",
+classification:"Charophyceae",
+icon:"🌿",
+description:"Unicellular freshwater green alga",
+habitat:"Freshwater",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"6th october, 2026 (12.40 PM)",
+image:"images/A018.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Charophyta",
+className:"Zygnematophyceae",
+order:"Desmidiales",
+family:"Desmidiaceae",
+genus:"Cosmarium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-06",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unicellular, with two semicells joined by a narrow isthmus..",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: Absent",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction by conjugation , forming zygospore."
+]
+},
+
+{
+id:91,
+title:"Staurastrum (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Charophyte Algae",
+classification:"Charophyceae",
+icon:"🌿",
+description:"Unicellular freshwater green alga",
+habitat:"Freshwater",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"6th october, 2026 (12.40 PM)",
+image:"images/A020.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Charophyta",
+className:"Zygnematophyceae",
+order:"Desmidiales",
+family:"Desmidiaceae",
+genus:"Staurastrum (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-06",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unicellular, with two semicells joined by a narrow isthmus..",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: Absent",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction by conjugation , forming zygospore."
+]
+},
+
+{
+id:93,
+title:"Closterium (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Charophyte Algae",
+classification:"Charophyceae",
+icon:"🌿",
+description:"Unicellular freshwater green alga",
+habitat:"Freshwater",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"6th october, 2026 (12.40 PM)",
+image:"images/A022.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae (traditional classification)",
+division:"Charophyta",
+className:"Zygnematophyceae",
+order:"Desmidiales",
+family:"Closteriaceae",
+genus:"Closterium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-06",
+identifyingCharacters:[
+"1) Colour: Grass-green.",
+"2) Habitat: Freshwater ponds, lakes and ditches.",
+"3) Cell structure: Unicellular, with two semicells joined by a narrow isthmus..",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: Absent",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & b.",
+"8) Other pigments: Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Starch.",
+"11) Sexuality: Sexual reproduction by conjugation , forming zygospore."
+]
+},
+
+{
+id:5,
+title:"Vaucheria (italics) 40x microscopic view",
+section:"algae",
+type:"photo",
+category:"Yellow-green Algae",
+classification:"Xanthophyceae",
+icon:"🧫",
+description:"yellow-green alga.",
+habitat:"Fresh water and marine water.",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"4th August, 2026 (19:40 PM)",
+image:"images/A006.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Ochrophyta (commonly used)",
+className:"Xanthophyceae",
+order:"Vaucheriales",
+family:"Vaucheriaceae",
+genus:"Vaucheria (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-08-04",
+identifyingCharacters:[
+"1) Colour: Yellow-green.",
+"2) Habitat: Freshwater ponds, lakes and occationally marine.",
+"3) Cell structure: Branched, tubular, coyenocytic",
+"4) Cell wall composition: cellulose & pectin.",
+"5) Flagella: 2 unequal flagella in zoospore.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & c.",
+"8) Other pigments: Beta-Carotene & xanthophylls.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Oil and leucosin(chrysolaminarin).",
+"11) Sexuality: Oogamous, oogonia contains the egg and anthridia produce multiflagellate male gametes."
+]
+},
+
+{
+id:6,
+title:"Ectocarpus (italics) at 40x magnificarion",
+section:"algae",
+type:"photo",
+category:"Brown Algae",
+classification:"Phaeophyceae",
+icon:"🌊",
+description:"A brown algae.",
+habitat:"Mainly marine;",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"19th August, 2026 (19:57)",
+image:"images/A007.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Heterokontophyta (Phaeophyta)",
+className:"Phaeophyceae",
+order:"Ectocarpales",
+family:"Ectocarpaceae",
+genus:"Ectocarpus (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha.",
+collectionDate:"2026-08-19",
+identifyingCharacters:[
+"1) Colour: Brown.",
+"2) Habitat: Mainly marine.",
+"3) Cell structure: Branched, filamentus thallus.",
+"4) Cell wall composition: cellulose & algin.",
+"5) Flagella: 2 unequal lateral flagella in motile reproductive cells.",
+"6) Eyespot: Present in motile reproductive cells.",
+"7) Green pigments: Chlorophyll a & c.",
+"8) Other pigments: Beta-Carotene & xanthophylls (Fucoxanthin).",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Laminarin and mannitol.",
+"11) Sexuality: Isogamous; similar sized, motile gametes fused to form a zygote."
+]
+},
+
+{
+id:7,
+title:"Polysiphonia (italics) at 40x magnification.",
+section:"algae",
+type:"photo",
+category:"Red Algae",
+classification:"Rhodophyceae",
+icon:"🌊",
+description:"Red algae.",
+habitat:"Marine.",
+location:"Coochbehar, A.B.N.Seal College, West Bengal.",
+date:"15th September, 2026 (15:30 PM)",
+image:"images/A008.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Rhodophyta",
+className:"Rhodophyceae",
+order:"Ceramiales",
+family:"Rhodomelaceae",
+genus:"Polysiphonieae (italics)",
+species:"polysiphonia (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-15",
+identifyingCharacters:[
+"1) Colour: Red.",
+"2) Habitat: Mainly marine.",
+"3) Cell structure: Branched, filamentus thallus.",
+"4) Cell wall composition: cellulose & Pectic substances.",
+"5) Flagella: Absent.",
+"6) Eyespot: Absent.",
+"7) Green pigments: Chlorophyll a & d.",
+"8) Other pigments: Phycocyanin, phycoerythrin and carotenoids.",
+"9) Nucleus: True nucleus Present.",
+"10) Stored food: Floridean starch.",
+"11) Sexuality: Oogamous, male spermatia are non motile and female carpogonium bears a trichogyne."
+]
+},
+
+{
+id:8,
+title:"Fungal Specimen 001",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Ascomycetes",
+icon:"🍄",
+description:"Ascobolus (coprophilous / dung loving fungi / cup fungi)",
+habitat:"Terrestrial, commonly found in moist places rich in organic matter.",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:15 AM)",
+image:"images/Ascobolus01.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Ascomycota",
+className:"Pezizomycetidae",
+order:"Pezizales",
+family:"Ascobolaceae",
+genus:"Ascobolus (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit - Solitary to gregarious, sometimes in small clusters.",
+"Appearence - Small, cup-shaped fruiting bodies, usually yellowish to orange-brown, becoming darker with age.",
+"Substrata - Dung (especially herbivore dung) and other decomposing organic material."
+]
+},
+
+{
+id:28,
+title:"Fungal Specimen 002",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Ascomycetes",
+icon:"🍄",
+description:"Ascobolus (coprophilous / dung loving fungi / cup fungi)",
+habitat:"Terrestrial, commonly found in moist places rich in organic matter.",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:16 AM)",
+image:"images/F002.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Ascomycota",
+className:"Pezizomycetidae",
+order:"Pezizales",
+family:"Ascobolaceae",
+genus:"Ascobolus (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit - Solitary to gregarious, sometimes in small clusters.",
+"Appearence - Small, cup-shaped fruiting bodies, usually yellowish to orange-brown, becoming darker with age.",
+"Substrata - Dung (especially herbivore dung) and other decomposing organic material."
+]
+},
+
+{
+id:9,
+title:"Fungal Specimen 003",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Honey Mushroom",
+habitat:"Terrestrial, in forests, parks, gardens, and grassy areas.",
+location:"Cooch Behar, West Bengal",
+date:"22nd September, 2026 (06:31 AM)",
+image:"images/fungi001.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales(Gilled mushroom)",
+family:"Physalariaceae",
+genus:"Armillaria (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-22",
+identifyingCharacters:[
+"Habit - Solitary to gregarious.",
+"Appearence - Large mushroom with a broad whitish to brownish cap covered with brown scales; stout white stipe with a prominent ring.",
+"Substrata - Soil, often rich in organic matter and woody debris."
+]
+},
+
+{
+id:29,
+title:"Fungal Specimen 004",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Pleated Inkcap (saprophytic decomposers)",
+habitat:"Found in moist places, cow dung etc.",
+location:"Cooch Behar, West Bengal",
+date:"29nd August, 2026 (07:21 AM)",
+image:"images/Parasola001.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales(Gilled mushroom)",
+family:"Psathyrellaceae",
+genus:"Parasola (italics)",
+species:"Plicatilis (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-29",
+identifyingCharacters:[
+"Habit- Saprophytic, Small and Short lived mushroom",
+"Appearence - Small,greyish-brown,umbrella shaped cap with slender whitish stalk.",
+"Substrata - Grows mainly on decaying wood, debris and herbaceous debris."
+]
+},
+
+{
+id:30,
+title:"Fungal Specimen 005",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Split gill mushroom (wild mushroom)",
+habitat:"On dead and decaying wood, commonly in forests and gardens.",
+location:"Cooch Behar, West Bengal",
+date:"29nd August, 2026 (07:25 AM)",
+image:"images/F005.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales(Gilled mushroom)",
+family:"Pleurotaceae",
+genus:"Schizophyllum (italics)",
+species:"commune (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-29",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Small, fan-shaped, whitish to greyish cap with a hairy surface and split/furrowed gills.",
+"Substrata - Dead and decaying logs, branches, stumps, and wooden debris."
+]
+},
+
+{
+id:31,
+title:"Fungal Specimen 006",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Snow fungus / silver ear fungus / white jelly mushroom",
+habitat:"Moist, humid forests and woodland areas.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F006.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Tremellomycetes",
+order:"Tremellales",
+family:"Tremellaceae",
+genus:"Tremella (italics)",
+species:"fuciformis (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, sometimes in small clusters.",
+"Appearence - White to translucent, soft and gelatinous, with a delicate leaf-like or brain-like lobed body.",
+"Substrata - Dead and decaying wood, especially decaying hardwood logs and branches. "
+]
+},
+
+{
+id:32,
+title:"Fungal Specimen 007",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Stagshorn species",
+habitat:"On dead and decaying conifer wood, especially in moist forests.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F007.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Dacrymycetes",
+order:"Dacrymycetales",
+family:"Dacrymycetaceae",
+genus:"Dacryopinax (italics)",
+species:"spathularia (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Bright yellow to orange, gelatinous, branched and antler-like fruiting body .",
+"Substrata - Dead and decaying conifer logs, stumps, and buried wood."
+]
+},
+
+{
+id:33,
+title:"Fungal Specimen 008",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Cinnabar polypore / orange bracket fungus",
+habitat:"On dead and decaying wood, mainly in tropical and subtropical forests.",
+location:"Cooch Behar, West Bengal",
+date:"19th September, 2026 (10:38 AM)",
+image:"images/F008.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Pycnoporous (italics)",
+species:"sanguineus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often overlapping in clusters.",
+"Appearence - On dead and decaying wood, mainly in tropical and subtropical forests.",
+"Substrata - Dead and decaying logs, stumps, and branches of hardwoods."
+]
+},
+
+{
+id:34,
+title:"Fungal Specimen 009",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Ganoderma / Bracket fungi",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F009.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Ganoderma (italics)",
+species:"applanatum (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:35,
+title:"Fungal Specimen 010",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Dark footed tinypore / Bracket fungi",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F010.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Microporous (italics)",
+species:"affinis (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:36,
+title:"Fungal Specimen 011",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Lingzhi mushroom / reishi / Ganoderma",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"19th September, 2026 (21:16 PM)",
+image:"images/F011.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Ganoderma (italics)",
+species:"lingzhi (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:37,
+title:"Fungal Specimen 012",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Reishi / Ganoderma",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"02nd September, 2026 (19:37 PM)",
+image:"images/F012.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Microporellus (italics)",
+species:"kolhapurensis (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-02",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:38,
+title:"Fungal Specimen 013",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Reishi / Ganoderma",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"18th September, 2026 (09:56 AM)",
+image:"images/F013.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Ganoderma (italics)",
+species:"lucidum (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-18",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:39,
+title:"Fungal Specimen 014",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"False Turkey Tail",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F014.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Trametes (italics)",
+species:"versicolor (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:40,
+title:"Fungal Specimen 015",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Earliella scabrosa (italics)",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"28th August, 2026 (16:36 PM)",
+image:"images/F015.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Earliella (italics)",
+species:"scabrosa (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-28",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:41,
+title:"Fungal Specimen 016",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Ascomycetes",
+icon:"🍄",
+description:"Purple jellydisc",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F016.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Ascomycota",
+className:"Leotiomycetes",
+order:"Helotiales",
+family:"Gelatinodiscaceae",
+genus:"Ascocoryne (italics)",
+species:"sarcoides (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to gregarious.",
+"Appearence - Hard, black, roughly spherical to hemispherical fruiting body with a rough surface",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:42,
+title:"Fungal Specimen 017",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Wine glass fungi",
+habitat:"Terrestrial, mainly in forests and woodland.",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:16 AM)",
+image:"images/F017.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales(Shelf fungi)",
+family:"Meruliaceae",
+genus:"Podoscypha (italics)",
+species:"petalodes (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Fan- to petal-shaped, thin, brownish to reddish-brown fruiting bodies with wavy margins",
+"Substrata - Soil, leaf litter, and decaying woody debris."
+]
+},
+
+{
+id:43,
+title:"Fungal Specimen 018",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"selender shaped short lived mushroom",
+habitat:"Saprophytic, Short lived, delicate mushroom",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:03 AM)",
+image:"images/F018.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Psathyrellaceae",
+genus:"Coprinopsis (italics)",
+species:"lagopus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit- Found in moist places.",
+"Appearence - Small,white-grey,bell shaped cap that becomes black and deliquescent with age.",
+"Substrata - Grows mainly on decaying wood, debris and other cellulose-rich organic matter."
+]
+},
+
+{
+id:44,
+title:"Fungal Specimen 019",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"bell shaped white and pale grey mushroom",
+habitat:"Found in moist places, decaying wood.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (14:06 PM)",
+image:"images/F019.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Psathyrellaceae",
+genus:"Coprinellus (italics)",
+species:"disseminatus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Small,delicate,grayish-whitish mushrooms, caps are bell shaped.",
+"Substrata - Grows mainly on dead and decaying wood."
+]
+},
+
+{
+id:45,
+title:"Fungal Specimen 020",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Gilled Mushroom",
+habitat:"On dead or decaying wood, especially beech.",
+location:"Cooch Behar, West Bengal",
+date:"21th September, 2026 (08:36 AM)",
+image:"images/F020.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Strophariaceae",
+genus:"Gymnopus (italics)",
+species:"dryophilus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-21",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Small,delicate,grayish-whitish mushrooms, caps are bell shaped.",
+"Substrata - Grows mainly on dead and decaying wood."
+]
+},
+
+{
+id:46,
+title:"Fungal Specimen 021",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Miller's oysterling (likely oyester mushroom)",
+habitat:"Terrestrial, commonly found in moist woodland and forest areas.",
+location:"Cooch Behar, West Bengal",
+date:"19th September, 2026 (21:16 PM)",
+image:"images/F021.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Entolomataceae",
+genus:"Clitopilus (italics)",
+species:"hobsonii (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, sometimes in small clusters.",
+"Appearence - Small, white to pale-grey, fan- or shell-shaped cap with a smooth to slightly wrinkled surface; stipe very short or lateral.",
+"Substrata - Dead and decaying wood, especially small branches, twigs and woody debris."
+]
+},
+
+{
+id:47,
+title:"Fungal Specimen 022",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Golden oyester mushroom",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (15:27 PM)",
+image:"images/F022.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Entolomataceae",
+genus:"Pleurotus (italics)",
+species:"citrinopileatus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Bright yellow, fan- to funnel-shaped caps, usually growing in clusters; short lateral stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:48,
+title:"Fungal Specimen 023",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"oyester mushroom (fan-shaped to funnel like cream white caps)",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"29th September, 2026 (01:08 AM)",
+image:"images/F023.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Lentinus (italics)",
+species:"squarrosulus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-29",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Bright yellow, fan- to funnel-shaped caps, usually growing in clusters; short lateral stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:10,
+title:"Slime Mould Observation 001",
+section:"fungi",
+type:"photo",
+category:"Slime Mould",
+classification:"Slime Mould",
+icon:"🟠",
+description:"Slime Mould/ candy slime mould.",
+habitat:"On dead and decaying wood, especially in moist forests.",
+location:"Cooch Behar, West Bengal",
+date:"07th September, 2026 (14:03 PM)",
+image:"images/Slimemould.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Amoebozoa",
+className:"Myxogastria (true slime moulds)",
+order:"Trichiales",
+family:"Arcyriaceae",
+genus:"Arcyria",
+species:"Sp"
+},
+collectedBy:"Bikram singha",
+collectionDate:"2026-09-07",
+identifyingCharacters:[
+"Habit - Solitary to gregarious, often in clusters.",
+"Appearence - Bright pink to reddish, cylindrical or club-shaped spore masses that become pale and powdery with age .",
+"Substrata - Dead and decaying logs, branches, and woody plant debris ."
+]
+},
+
+{
+id:49,
+title:"Slime Mould Observation 002",
+section:"fungi",
+type:"photo",
+category:"Slime Mould",
+classification:"Slime Mould",
+icon:"🟠",
+description:"Slime Mould",
+habitat:"Terrestrial, commonly in moist forests and woodland",
+location:"Cooch Behar, West Bengal",
+date:"18th September, 2026 (16:42 PM)",
+image:"images/Slimemould002.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Mycetozoa",
+className:"Myxomycetes (true slime moulds)",
+order:"Physarales",
+family:"Arcyriaceae",
+genus:"Trichamphora",
+species:"pezizoidea"
+},
+collectedBy:"Bikram singha",
+collectionDate:"2026-09-18",
+identifyingCharacters:[
+"Habit - Solitary to gregarious, often in clusters.",
+"Appearence - Small, white to greyish-white, rounded to slightly elongated sporangia with a powdery surface.",
+"Substrata - Dead and decaying leaves, twigs, bark, and plant litter."
+]
+},
+
+{
+id:50,
+title:"Fungal Specimen 024",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"bonnets / bonnet mushrooms",
+habitat:"Found in moist places, decaying wood.",
+location:"Cooch Behar, West Bengal",
+date:"07th October, 2026 (11:00 AM)",
+image:"images/F024.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Mycenaceae",
+genus:"Mycena (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-07",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Small,delicate,grayish-whitish mushrooms, caps are bell shaped.",
+"Substrata - Grows mainly on dead and decaying wood."
+]
+},
+
+{
+id:51,
+title:"Fungal Specimen 025",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Fairy inkcap",
+habitat:"Found in moist places, decaying wood.",
+location:"Cooch Behar, West Bengal",
+date:"22th September, 2026 (09:18 AM)",
+image:"images/F025.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Psathyrellaceae",
+genus:"Coprienllus (italics)",
+species:"disseminatus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-22",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Small,delicate,grayish-whitish mushrooms, caps are bell shaped.",
+"Substrata - Grows mainly on dead and decaying wood."
+]
+},
+
+{
+id:52,
+title:"Fungal Specimen 026",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Funnel cap",
+habitat:"Terrestrial, mainly in forests and grasslands.",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:05 AM)",
+image:"images/F026.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Omphalinaceae",
+genus:"Infundibulicybe (italics)",
+species:"squamulosa (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Funnel-shaped, pale brown to greyish-brown cap with small scales and a stout, fibrous stipe .",
+"Substrata - Soil, leaf litter and decaying organic matter."
+]
+},
+
+{
+id:53,
+title:"Fungal Specimen 027",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Fairy inkcap",
+habitat:"Found in moist places, decaying wood.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F027.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Psathyrellaceae",
+genus:"Coprienllus (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Saprophytic, grows in clusters.",
+"Appearence - Small,delicate,grayish-whitish mushrooms, caps are bell shaped.",
+"Substrata - Grows mainly on dead and decaying wood."
+]
+},
+
+{
+id:95,
+title:"Fungal Specimen 028",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Bonnet mushroom",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"2nd September, 2026 (19:35 PM)",
+image:"images/F028.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Pleurotaceae",
+genus:"Pleurotus (italics)",
+species:"longistriatus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-02",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small to medium mushroom with a brownish, striate cap and pale stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:96,
+title:"Fungal Specimen 029",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"thin stemmed mushroom",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"16th September, 2026 (09:45 AM)",
+image:"images/F029.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Marasmiineae",
+genus:"Hymenopellis (italics)",
+species:"furfuracea (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-16",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Large, pale to yellowish-brown, wrinkled/scaly cap with a long, slender stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:97,
+title:"Fungal Specimen 030",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Small brown wild mushroom",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F030.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Entolomataceae",
+genus:"Entoloma (italics)",
+species:"sphagnorum (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, brownish to greyish-brown cap, often convex to umbonate, with a slender stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:98,
+title:"Fungal Specimen 031",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Small white delicate mushroom",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"10th September, 2026 (09:27 AM)",
+image:"images/F031.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Mycenaceae",
+genus:"Hemimycena (italics)",
+species:"cucullata (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-10",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate white mushroom with a convex to bell-shaped, translucent-striate cap and slender white stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:99,
+title:"Fungal Specimen 032",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Pinwheel",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"1st September, 2026 (09:48 AM)",
+image:"images/F032.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Marasmiaceae",
+genus:"Marasmius (italics)",
+species:"siccus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-01",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate mushroom with a reddish-orange to reddish-brown, wrinkled cap and a slender, dark stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:100,
+title:"Fungal Specimen 033",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Pinwheel",
+habitat:"On dead and decaying wood, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"5th September, 2026 (22:03 AM)",
+image:"images/F033.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Marasmiaceae",
+genus:"Marasmius (italics)",
+species:"haematocephalus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-05",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate mushroom with a reddish-brown to blood-red, wrinkled cap and a very slender dark stipe.",
+"Substrata - Dead and decaying hardwood logs, stumps, and branches."
+]
+},
+
+{
+id:101,
+title:"Fungal Specimen 034",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Caprophytic fungi",
+habitat:"On dead animal parts, dung, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"30th September, 2026 (07:27 AM)",
+image:"images/F034.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Strophariaceae",
+genus:"Deconica (italics)",
+species:"coprophila (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-30",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate mushroom with a reddish-brown to blood-red, wrinkled cap and a very slender dark stipe.",
+"Substrata - Dead and decaying animal part, dung"
+]
+},
+
+{
+id:102,
+title:"Fungal Specimen 035",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Caprophytic fungi",
+habitat:"On dead animal parts, dung, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"22nd September, 2026 (07:44 AM)",
+image:"images/F035.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Bolbitiaceae",
+genus:"Bolbitius (italics)",
+species:"coprophilus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-22",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate mushroom with a reddish-brown to blood-red, wrinkled cap and a very slender dark stipe.",
+"Substrata - Dead and decaying animal part, dung"
+]
+},
+
+{
+id:103,
+title:"Fungal Specimen 036",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Caprophytic fungi",
+habitat:"On dead animal parts, dung, mainly in temperate forests .",
+location:"Cooch Behar, West Bengal",
+date:"14th September, 2026 (10:45 AM)",
+image:"images/F036.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Bolbitiaceae",
+genus:"Bolbitius (italics)",
+species:"coprophilus (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-14",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Small, delicate mushroom with a reddish-brown to blood-red, wrinkled cap and a very slender dark stipe.",
+"Substrata - Dead and decaying animal part, dung"
+]
+},
+
+{
+id:104,
+title:"Fungal Specimen 037",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Wood ear / jelly ear",
+habitat:"Wood.",
+location:"Cooch Behar, West Bengal",
+date:"30th July, 2026 (10:06 AM)",
+image:"images/F037.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Auriculariaceae",
+genus:"Auricularia (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-07-30",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Ear-shaped, gelatinous, reddish-brown to dark brown fruiting body with a wrinkled/veined surface.",
+"Substrata - Woods."
+]
+},
+
+{
+id:105,
+title:"Fungal Specimen 038",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Wood ear / jelly ear",
+habitat:"Woods.",
+location:"Cooch Behar, West Bengal",
+date:"20th September, 2026 (12:46 PM)",
+image:"images/F038.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Auriculariaceae",
+genus:"Auricularia (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Ear-shaped, gelatinous, reddish-brown to dark brown fruiting body with a wrinkled/veined surface.",
+"Substrata - Woods."
+]
+},
+
+{
+id:106,
+title:"Fungal Specimen 039",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Blue suface, white gill.",
+habitat:"Soil, temperate forest.",
+location:"Cooch Behar, West Bengal",
+date:"16th October, 2026 (07:47 AM)",
+image:"images/F039.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Entolomataceae",
+genus:"Entoloma (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-16",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - A distinct blue surface , white gilled fungi.",
+"Substrata - Woods."
+]
+},
+
+{
+id:107,
+title:"Fungal Specimen 040",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Saprophytic fungi.",
+habitat:"Soil, temperate forest.",
+location:"Cooch Behar, West Bengal",
+date:"22th September, 2026 (20:33 AM)",
+image:"images/F040.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Pluteaceae",
+genus:"Pluteus (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-22",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Dark brown gilled mushroom",
+"Substrata - Woods."
+]
+},
+
+{
+id:108,
+title:"Fungal Specimen 041",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Dotty inkcap.",
+habitat:"Soil, temperate forest.",
+location:"Cooch Behar, West Bengal",
+date:"01st September, 2026 (19:57 AM)",
+image:"images/F041.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Agaricales",
+family:"Psathyrellaceae",
+genus:"Coprinopsis (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-01",
+identifyingCharacters:[
+"Habit- Solitary to cespitose (clustered) .",
+"Appearence - Dotty inkcap.",
+"Substrata - Woods."
+]
+},
+
+{
+id:109,
+title:"Fungal Specimen 042",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Lingzhi mushroom / reishi / Ganoderma",
+habitat:"On dead and decaying wood; sometimes parasitic on living trees.",
+location:"Cooch Behar, West Bengal",
+date:"16th October, 2026 (11:53 AM)",
+image:"images/F042.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Ganoderma (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-16",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often in clusters.",
+"Appearence - Woody, shelf/bracket-shaped fruiting body with a hard, often shiny reddish-brown to dark brown upper surface.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:110,
+title:"Fungal Specimen 043",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"Cinnabar polypore / orange bracket fungus",
+habitat:"On dead and decaying wood, mainly in tropical and subtropical forests.",
+location:"Cooch Behar, West Bengal",
+date:"16th September, 2026 (12:08 AM)",
+image:"images/F043.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"Polyporales",
+family:"Polyporaceae",
+genus:"Pycnoporous (italics)",
+species:"Sp (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-16",
+identifyingCharacters:[
+"Habit- Solitary to gregarious, often overlapping in clusters.",
+"Appearence - On dead and decaying wood, mainly in tropical and subtropical forests.",
+"Substrata - Dead and decaying logs, stumps, and branches of hardwoods."
+]
+},
+
+{
+id:111,
+title:"Fungal Specimen 044",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"unidentified",
+habitat:"unidentified",
+location:"Cooch Behar, West Bengal",
+date:"05th October, 2026 (10:54 AM)",
+image:"images/F044.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"unidentified",
+family:"unidentified",
+genus:"unidentified",
+species:"unidentified"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-05",
+identifyingCharacters:[
+"Habit- unidentified",
+"Appearence - unidentified",
+"Substrata - unidentified"
+]
+},
+
+{
+id:112,
+title:"Fungal Specimen 045",
+section:"fungi",
+type:"photo",
+category:"Fungi",
+classification:"Basidiomycetes",
+icon:"🍄",
+description:"unidentified",
+habitat:"unidentified",
+location:"Cooch Behar, West Bengal",
+date:"01st September, 2026 (09:46 AM)",
+image:"images/F045.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Basidiomycota",
+className:"Agaricomycetes",
+order:"unidentified",
+family:"unidentified",
+genus:"unidentified",
+species:"unidentified"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-01",
+identifyingCharacters:[
+"Habit- unidentified",
+"Appearence - unidentified",
+"Substrata - unidentified"
+]
+},
+
+{
+id:200,
+title:"Slime Mould Observation 003",
+section:"fungi",
+type:"photo",
+category:"Slime Mould",
+classification:"Slime Mould",
+icon:"🟠",
+description:"Yellow Mould",
+habitat:"Moist soil, decaying organic matter, and damp plant materials.",
+location:"Cooch Behar, West Bengal",
+date:"18th September, 2026 (09:47 AM)",
+image:"images/Slimemould003.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Mycetozoa",
+className:"Myxomycetes (true/acellular slime moulds)",
+order:"Physarales",
+family:"Physaraceae",
+genus:"Physarum (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram singha",
+collectionDate:"2026-09-18",
+identifyingCharacters:[
+"Habit - Filamentous, spreading growth.",
+"Appearence - Yellow to yellowish-orange, powdery or cottony growth.",
+"Substrata - Dead and decaying logs, stumps, and tree trunks."
+]
+},
+
+{
+id:55,
+title:"Slime Mould Observation 004",
+section:"fungi",
+type:"photo",
+category:"Slime Mould",
+classification:"Slime Mould",
+icon:"🟠",
+description:"White Mould.",
+habitat:"Moist soil, decaying organic matter, and damp plant materials.",
+location:"Cooch Behar, West Bengal",
+date:"13th September, 2026 (09:07 AM)",
+image:"images/Sm004.jpg",
+taxonomicDetails:{
+kingdom:"Fungi",
+division:"Ascomycota",
+className:"Pezizomycetes (true slime moulds)",
+order:"Pezizales",
+family:"Pezizaceae",
+genus:"Chromelosporium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram singha",
+collectionDate:"2026-09-13",
+identifyingCharacters:[
+"Habit - Filamentous , spreading growth",
+"Appearence - White fungal mycelium like",
+"Substrata - Dead and decaying logs, branches, and woody plant debris ."
+]
+},
+
+{
+id:11,
+title:"Lichen Collection",
+section:"lichen",
+type:"photo",
+category:"Lichen",
+classification:"Lichen",
+icon:"🌱",
+description:"Add your lichen photograph and observations of thallus, substrate and habitat.",
+habitat:"Rock, bark, soil or other substrate",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/L001.jpg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Not identified",
+className:"Not identified",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Record thallus form and colour",
+"Note whether thallus is crust-like, leaf-like or branched",
+"Record the substrate on which it grows"
+]
+},
+
+{
+id:12,
+title:"Crustose Lichen 001",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Crustose",
+icon:"🪨",
+description:"Crustose lichens form a crust closely attached to the substrate.",
+habitat:"Rock or bark",
+location:"Add your collection location",
+date:"22nd August , 2026 (16:29 PM)",
+image:"images/L002.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Ascomycota",
+className:"Arthoniomycetes",
+order:"Arthoniales",
+family:"Arthoniaceae",
+genus:"Cryptohecia (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-22",
+identifyingCharacters:[
+"Thallus : Crust-like thallus",
+"Attachment : Closely attached to the substrate, Often difficult to remove intact",
+"Reproduction : (Vegetative: Fragmentation), (Axesual: Conidia & Pycnidiospore), (Sexual: Ascospore/ Basidiospore)"
+]
+},
+
+{
+id:13,
+title:"Foliose Lichen 001",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Foliose",
+icon:"🍃",
+description:"Foliose lichens have a leaf-like, often lobed thallus.",
+habitat:"Rock, bark or soil",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"3rd October , 2026 (07:35 AM)",
+image:"images/L001.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Ascomycota",
+className:"Lecanoromycetes",
+order:"Caliciales",
+family:"Caliciaceae",
+genus:"Dirinaria (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-03",
+identifyingCharacters:[
+"Thallus : Leaf-like and often lobed thallus",
+"Reproductive structures : Soredia(Asexual) & Apothecia(fungal fruiting body)",
+"Attachment : Extremely close attachment to tree bark, often resembling a crustose lichen."
+]
+},
+
+{
+id:56,
+title:"Foliose Lichen 002",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Foliose",
+icon:"🍃",
+description:"Foliose lichens have a leaf-like, often lobed thallus.",
+habitat:"Rock, bark or soil",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"3rd October , 2026 (07:35 AM)",
+image:"images/L003.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Ascomycota",
+className:"Lecanoromycetes",
+order:"Lecanorales",
+family:"Parmelioideae",
+genus:"Flavoparmelia (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-03",
+identifyingCharacters:[
+"Thallus : Leaf-like and often lobed thallus",
+"Reproductive structures :(Axesual: Soredia), (Sexual: Rare)",
+"Attachment : Attached by root like structure called Rhizines."
+]
+},
+
+{
+id:57,
+title:"Foliose Lichen 003",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Foliose",
+icon:"🍃",
+description:"Foliose lichens have a leaf-like, often lobed thallus.",
+habitat:"Rock, bark or soil",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"16th October , 2026 (11:37 AM)",
+image:"images/L004.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Ascomycota",
+className:"Lecanoromycetes",
+order:"Lecanorales",
+family:"Parmeliaceae",
+genus:"Parmelia (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-16",
+identifyingCharacters:[
+"Thallus : Leaf-like and often lobed thallus",
+"Reproductive structures :(Vegetative: Fragmentation); (Axesual: Pycnidia), (Sexual: Ascospores)",
+"Attachment : Attached by root like structure called Rhizines."
+]
+},
+
+{
+id:58,
+title:"Crustose Lichen 002",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Crustose",
+icon:"🪨",
+description:"Crustose lichens form a crust closely attached to the substrate.",
+habitat:"Rock or bark",
+location:"Add your collection location",
+date:"16th October , 2026 (11:38 AM)",
+image:"images/L005.jpeg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Ascomycota",
+className:"Lecanoromycetes",
+order:"Lecanorales",
+family:"Graphidaceae",
+genus:"Arthonia (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-16",
+identifyingCharacters:[
+"Thallus : Crust-like thallus",
+"Attachment : Closely attached to the substrate, Often difficult to remove intact",
+"Reproduction : (Vegetative: Fragmentation), (Axesual: isidia), (Sexual: Ascospore)"
+]
+},
+
+{
+id:14,
+title:"Fruticose Lichen",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Fruticose",
+icon:"🌿",
+description:"Fruticose lichens have a branched, shrubby or hanging thallus.",
+habitat:"Bark, rocks or other surfaces",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/L004.jpg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Not identified",
+className:"Not identified",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Three-dimensional branched or shrubby thallus",
+"May be erect or hanging",
+"Record branching and attachment"
+]
+},
+
+{
+id:15,
+title:"Leprose Lichen",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Leprose",
+icon:"🌱",
+description:"Leprose lichens generally have a powdery or granular appearance.",
+habitat:"Add observed substrate",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/L005.jpg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Not identified",
+className:"Not identified",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Powdery or granular appearance",
+"Thallus often lacks a clearly differentiated cortex",
+"Confirm morphology with an appropriate reference"
+]
+},
+
+{
+id:16,
+title:"Filamentous Lichen",
+section:"lichen",
+type:"photo",
+category:"Lichen Morphology",
+classification:"Filamentous",
+icon:"🧵",
+description:"Use this record for a verified filament-like lichen form.",
+habitat:"Add observed substrate",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/L006.jpg",
+taxonomicDetails:{
+kingdom:"Fungi (lichen-forming partner)",
+division:"Not identified",
+className:"Not identified",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Record the filament-like thallus form",
+"Observe branching and attachment",
+"Confirm the identification before publishing"
+]
+},
+
+{
+id:17,
+title:"Riccia (italics)",
+section:"bryophytes",
+type:"photo",
+category:"Bryophytes",
+classification:"Bryophyta",
+icon:"🌿",
+description:"Thalloid liverwort.",
+habitat:"Terrestial",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"22-08-2026 (14:51 PM)",
+image:"images/B001.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Marchantiophyta",
+className:"Marchantiopsida",
+order:"Marchantiales",
+family:"cyathodiaceae",
+genus:"Cyathodium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-22",
+identifyingCharacters:[
+"Typically grows on soil , rock",
+"Thallus is flat green",
+"Dorsiventral gametophytic thallus"
+]
+},
+
+{
+id:82,
+title:"Moss",
+section:"bryophytes",
+type:"photo",
+category:"Bryophytes",
+classification:"Bryophyta",
+icon:"🌿",
+description:"Plays important role in ecological succession.",
+habitat:"Terrestial",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"22-08-2026 (14:53 PM)",
+image:"images/B002.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Bryophyta",
+className:"Bryopsida",
+order:"Dicranales",
+family:"Leucobryaceae",
+genus:"Leucobryum (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-08-22",
+identifyingCharacters:[
+"Typically grows on soil , rock",
+"Thallus is green",
+"Belong to the class of true moss."
+]
+},
+
+{
+id:83,
+title:"Moss",
+section:"bryophytes",
+type:"photo",
+category:"Bryophytes",
+classification:"Bryophyta",
+icon:"🌿",
+description:"Plays important role in ecological succession.",
+habitat:"Terrestial",
+location:"Ghughumari, Coochbehar, West Bengal.",
+date:"16-10-2026 (10:53 AM)",
+image:"images/B003.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Bryophyta",
+className:"Bryopsida",
+order:"Hypnales",
+family:"Hypnaceae",
+genus:"Hypnum (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-16",
+identifyingCharacters:[
+"Typically grows on soil , rock",
+"Thallus is dark green",
+"Belong to the class of true moss."
+]
+},
+
+{
+id:18,
+title:"Fern 001",
+section:"pteridophytes",
+type:"photo",
+category:"Pteridophytes",
+classification:"Ferns",
+icon:"🌾",
+description:"Australian tree fern",
+habitat:"Terrestial",
+location:"Ghughumari, Cooch Behar.",
+date:"20-09-2026 (09:30 AM)",
+image:"images/P001.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Polypodiophyta",
+className:"Polypodiopsida",
+order:"Cyatheales",
+family:"Cyatheaceae",
+genus:"Sphaeropteris (italics)",
+species:"cooperi (italics)"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Pinnate division",
+"The prominent yellow-brown bumps lining the underside of the leaf segments are called sori (singular: sorus).",
+"They are arranged in highly symmetrical, organized rows running parallel on both sides of the minor veins or leaflet margins."
+]
+},
+
+{
+id:84,
+title:"Fern 002",
+section:"pteridophytes",
+type:"photo",
+category:"Pteridophytes",
+classification:"Ferns",
+icon:"🌾",
+description:"Vegetable fern",
+habitat:"Terrestial",
+location:"Ghughumari, Cooch Behar.",
+date:"20-09-2026 (09:30 AM)",
+image:"images/P002.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Polypodiophyta",
+className:"Polypodiopsida",
+order:"Polypodiales",
+family:"Athyriaceae",
+genus:"Diplazium (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-20",
+identifyingCharacters:[
+"Pinnate division",
+"The prominent yellow-brown bumps lining the underside of the leaf segments are called sori (singular: sorus).",
+"They are arranged in highly symmetrical, organized rows running parallel on both sides of the minor veins or leaflet margins."
+]
+},
+
+{
+id:94,
+title:"Fern 003 (Selaginella)",
+section:"pteridophytes",
+type:"photo",
+category:"Pteridophytes",
+classification:"Ferns",
+icon:"🌾",
+description:" fern",
+habitat:"Terrestial",
+location:"Ghughumari, Cooch Behar.",
+date:"03-10-2026 (10:37 AM)",
+image:"images/P003.jpeg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Tracheophyta",
+className:"Lycopodiopsida",
+order:"Selaginelles",
+family:"Selaginellaceae",
+genus:"Selaginella (italics)",
+species:"Sp"
+},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-10-03",
+identifyingCharacters:[
+"The plant exhibits a characteristic forked (Y-shaped) branching pattern.",
+"commonly known as spikemoss or lesser clubmoss).",
+"Despite its common names, it is a vascular plant (a pteridophyte) and is more closely related to ferns than to true mosses."
+]
+},
+
+{
+id:19,
+title:"Gymnosperm Specimen",
+section:"gymnosperms",
+type:"photo",
+category:"Gymnosperms",
+classification:"Gymnosperms",
+icon:"🌲",
+description:"Record leaves, cones and other relevant structures.",
+habitat:"Add observed habitat",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/G001.jpg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Tracheophyta",
+className:"Gymnosperms (traditional group)",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Record leaf shape and arrangement",
+"Observe cones or other reproductive structures if present",
+"Record bark and growth form where useful"
+]
+},
+
+{
+id:20,
+title:"Angiosperm Specimen",
+section:"angiosperms",
+type:"photo",
+category:"Angiosperms",
+classification:"Flowering Plants",
+icon:"🌸",
+description:"Record leaves, flowers, fruits and other diagnostic characters.",
+habitat:"Add observed habitat",
+location:"Add your collection location",
+date:"Add observation date",
+image:"images/AN001.jpg",
+taxonomicDetails:{
+kingdom:"Plantae",
+division:"Tracheophyta",
+className:"Not identified",
+order:"Not identified",
+family:"Not identified",
+genus:"Not identified",
+species:"Not identified"
+},
+collectedBy:"Add collector name",
+collectionDate:"YYYY-MM-DD",
+identifyingCharacters:[
+"Record leaf shape, venation and arrangement",
+"Observe flower structure when available",
+"Record fruit, seed and growth form if present"
+]
+},
+
+{
+id:21,
+title:"1 st sem Economic Botany And Ethnomedicine.",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"Economic Botany and Ethnomedicine",
+icon:"📒",
+description:"pdf link is given below, Best wishes.",
+habitat:"Notes",
+location:"",
+date:"17 october 2026",
+image:"images1/Noteseconomicbotany.jpeg",
+file:"PDF/BSc Sem 1 Botany (BS).pdf",
+taxonomicDetails:{},
+collectedBy:"Not applicable",
+collectionDate:"Not applicable",
+identifyingCharacters:[]
+},
+
+{
+id:22,
+title:"Ecology Introduction (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/ecologyintro.jpeg",
+file:"PDF/ecologyintro.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:23,
+title:"Biotic interactions (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/bioticinteraction.jpeg",
+file:"PDF/bioticinteraction.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:70,
+title:"Habitat and niche (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/habitatandniche.jpeg",
+file:"PDF/habitatandniche.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:71,
+title:"Ecosystem (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/ecosystem.jpeg",
+file:"PDF/ecosystem.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:72,
+title:"Adaptations (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/adaptation.jpeg",
+file:"PDF/adaptation.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:73,
+title:"Dynamics and succession (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/succession.jpeg",
+file:"PDF/succession.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:74,
+title:"Production and productivity (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/production.jpeg",
+file:"PDF/production.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:75,
+title:"Biogeochemical cycle (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/biogeochem.jpeg",
+file:"PDF/biogeochem.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:76,
+title:"Theory of tolerance (Sem 2)",
+section:"notes",
+type:"notes",
+category:"Study Notes",
+classification:"ecology",
+icon:"✍️",
+description:"Pdf link attached below, best wishes.",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/tot.jpeg",
+file:"PDF/tot.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:24,
+title:"Botany Practice Questions Sem 1",
+section:"papers",
+type:"questions",
+category:"Practice Questions",
+classification:"Botany",
+icon:"❓",
+description:"Add short-answer and long-answer questions and solutions. pdf link attached below",
+habitat:"Sem 1",
+location:"",
+date:"17-10-2026",
+image:"images1/SIQ2.jpeg",
+file:"PDF/SIQ2.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:25,
+title:"Botany Practice Questions Sem 2",
+section:"papers",
+type:"questions",
+category:"Practice Questions",
+classification:"Botany",
+icon:"❓",
+description:"Add short-answer and long-answer questions and solutions. pdf link attached below",
+habitat:"Sem 2",
+location:"",
+date:"17-10-2026",
+image:"images1/SIQ1.jpeg",
+file:"PDF/SIQ1.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"17-10-2026",
+identifyingCharacters:[]
+},
+
+{
+id:26,
+title:"Microscopy Reference Materials",
+section:"materials",
+type:"notes",
+category:"Study Materials",
+classification:"Microscopy",
+icon:"📚",
+description:"Add microscopy references, learning materials and your own PDFs.",
+habitat:"Microscopy",
+location:"",
+date:"Add publication date",
+image:"",
+file:"",
+taxonomicDetails:{},
+collectedBy:"Not applicable",
+collectionDate:"Not applicable",
+identifyingCharacters:[]
+},
+
+{
+id:27,
+title:"Starch grain of potato tuber.",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Stained in iodine solution and starch grains are semicompound in nature with ecentric hilum.",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"13 November, 2025",
+image:"images/starchgrain.jpeg",
+file:"PDF/starchgrain01.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2025-11-13",
+identifyingCharacters:[
+"starch grains are semicompound in nature with ecentric hilum."]
+},
+
+{
+id:66,
+title:"Localization of starch grain of TS of potato tuber.",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Stained in iodine solution and starch grains are semicompound in nature with ecentric hilum.",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"13 November, 2025",
+image:"images/starchgraints.jpeg",
+file:"PDF/starchgraints.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2025-11-13",
+identifyingCharacters:[
+"starch grains are semicompound in nature with ecentric hilum."]
+},
+
+{
+id:67,
+title:"Study of starch grain of rice endosperm.",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Stained in iodine solution and starch grains are compound in nature with concentric hilum.",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"20 November, 2025",
+image:"images/starchgrainrice.jpeg",
+file:"PDF/starchgrainrice.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2025-11-20",
+identifyingCharacters:[
+"starch grains are compound in nature with concentric hilum."]
+},
+
+{
+id:68,
+title:"TS of stem parasite Cuscuta(italics) sp",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Haustorium enter host plant and absorb nutrients",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"07th May, 2026",
+image:"images/tsofcuscuta.jpg",
+file:"PDF/tscuscuta.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-05-07",
+identifyingCharacters:[
+"Haustorium developed from the stem and enters inside of host xylem"]
+},
+
+{
+id:69,
+title:"TS of root parasite Orobranchae(italics) sp",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Haustorium enter host plant and absorb nutrients",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"07th May, 2026",
+image:"images/orobranchae.jpg",
+file:"PDF/orobranchae.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-05-07",
+identifyingCharacters:[
+"Haustorium developed from the stem and enters inside of host xylem"]
+},
+
+{
+id:77,
+title:"Stomata of Bakul{Mimusops elengi(italics)}",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"stomata seen at 40x magnification.",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"07th May, 2026",
+image:"images/stomata.jpeg",
+file:"",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-05-07",
+identifyingCharacters:[
+"lower epidermis of bakul tree of ABNSeal college"]
+},
+
+{
+id:78,
+title:"Ctenoid scale of koi fish {Anabas testudineus(italics)}",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Ctenoid scale",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"19th September, 2026",
+image:"images/ctenoid.jpeg",
+file:"PDF/cycloid&ctenoid.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"ctenoid scale"]
+},
+
+{
+id:79,
+title:"Cycloid scale of bata fish {Labeo bata(italics)}",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Cycloid scale",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"19th September, 2026",
+image:"images/Cycloid.jpeg",
+file:"PDF/cycloid&ctenoid.pdf",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"cycloid scale"]
+},
+
+{
+id:80,
+title:"Daphnia",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"daphnia",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"19th September, 2026",
+image:"images/daphnia.jpeg",
+file:"",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"daphnia"]
+},
+
+{
+id:81,
+title:"Cyclops (male)",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"Cyclops",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"19th September, 2026",
+image:"images/Cyclops.jpeg",
+file:"",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"Cyclops"]
+},
+
+{
+id:85,
+title:"Yeast (italics) cells under 40x magnification.",
+section:"research",
+type:"notes",
+category:"Research Notes",
+classification:"Field Work",
+icon:"🔬",
+description:"single cell fungi, activation requires sucrose.",
+habitat:"Practical",
+location:"Coochbehar, A.B.N.Seal College",
+date:"21th September, 2026 (15:11 PM)",
+image:"images/yeast.jpg",
+file:"",
+taxonomicDetails:{},
+collectedBy:"Bikram Singha",
+collectionDate:"2026-09-19",
+identifyingCharacters:[
+"Budduing og cells are marked"]
+},
+
+];
+
+/* SECTION INFORMATION */
+
+const sectionInfo = {
+all:["All Resources","Browse all collections and learning resources."],
+fungi:["Fungi Collection","Fungal photographs, taxonomy and field records."],
+lichen:["Lichen Collection","Lichen morphology, habitat and specimen observations."],
+algae:["Algae Collection","Algal groups, microscope images and observations."],
+bryophytes:["Bryophytes","Mosses, liverworts and hornworts."],
+pteridophytes:["Pteridophytes","Ferns and related vascular plants."],
+gymnosperms:["Gymnosperms","Conifers and other gymnosperm groups."],
+angiosperms:["Angiosperms","Flowering plant specimens."],
+notes:["Study Notes","Handwritten notes, diagrams and practical records."],
+papers:["Question Papers","Previous-year and practice questions."],
+materials:["Study Materials","References, handouts and PDFs."],
+research:["Research & Field Notes","Field observations and projects."],
+about:["About Bikram Bioscope","A student-built archive for botany learning and observation."]
+};
+
+const specimenSections = [
+"fungi","lichen","algae","bryophytes",
+"pteridophytes","gymnosperms","angiosperms"
+];
+
+/* ENSURE ALL SPECIMENS HAVE TAXONOMY AND COLLECTION FIELDS */
+
+resources.forEach(r => {
+  if (specimenSections.includes(r.section)) {
+    r.taxonomicDetails = r.taxonomicDetails || {
+      kingdom:"Not identified",
+      division:"Not identified",
+      className:"Not identified",
+      order:"Not identified",
+      family:"Not identified",
+      genus:"Not identified",
+      species:"Not identified"
+    };
+
+    r.collectedBy = r.collectedBy || "Add collector name";
+    r.collectionDate = r.collectionDate || "YYYY-MM-DD";
+    r.identifyingCharacters = r.identifyingCharacters || [];
+  }
+});
+
+/* FILTERS */
+
+const filterOptions = {
+all:[
+["all","All resources"],["photo","Photo records"],
+["notes","Notes"],["questions","Questions"]
+],
+fungi:[
+["all","All fungi"],["Ascomycetes","Ascomycetes"],
+["Basidiomycetes","Basidiomycetes"],["Slime Mould","Slime mould"]
+],
+lichen:[
+["all","All lichens"],["Crustose","Crustose"],
+["Foliose","Foliose"],["Fruticose","Fruticose"],
+["Leprose","Leprose"],["Filamentous","Filamentous"]
+],
+algae:[
+["all","All algae"],["Cyanophyceae","Cyanophyceae"],
+["Chlorophyceae","Chlorophyceae"],["Charophyceae","Charophyceae"],
+["Xanthophyceae","Xanthophyceae"],
+["Bacillariophyceae","Bacillariophyceae"],
+["Phaeophyceae","Phaeophyceae"],
+["Rhodophyceae","Rhodophyceae"]
+]
+};
+
+let currentSection = "all";
+let currentFilter = "all";
+let query = "";
+
+const grid = document.getElementById("resourceGrid");
+
+function esc(value="") {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function renderFilters() {
+  const options = filterOptions[currentSection] ||
+    [["all","All resources"]];
+
+  document.getElementById("filters").innerHTML =
+    options.map(([value,label]) => `
+      <button class="chip ${currentFilter===value?"active":""}"
+              data-filter="${esc(value)}">
+        ${esc(label)}
+      </button>
+    `).join("");
+
+  document.querySelectorAll("#filters [data-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      currentFilter = button.dataset.filter;
+      render();
+    });
+  });
+}
+
+function filteredResources() {
+  let list = resources.filter(r => {
+    const matchSection =
+      currentSection==="all" ||
+      currentSection==="about" ||
+      r.section===currentSection;
+
+    let matchFilter = true;
+
+    if (currentFilter!=="all") {
+      if (["all","notes","papers","materials","research","about"]
+          .includes(currentSection)) {
+        if (currentFilter==="photo") matchFilter = r.type==="photo";
+        else if (currentFilter==="notes") matchFilter = r.type==="notes";
+        else if (currentFilter==="questions") matchFilter = r.type==="questions";
+      } else {
+        matchFilter =
+          (r.classification||"").toLowerCase() ===
+          currentFilter.toLowerCase();
+      }
+    }
+
+    const searchable = [
+      r.title,r.section,r.type,r.category,r.classification,
+      r.description,r.habitat,r.location
+    ].join(" ").toLowerCase();
+
+    return matchSection && matchFilter && searchable.includes(query);
+  });
+
+  const sort = document.getElementById("sortSelect").value;
+
+  list.sort((a,b) => {
+    if (sort==="za") return b.title.localeCompare(a.title);
+    if (sort==="type") {
+      return a.section.localeCompare(b.section) ||
+        a.title.localeCompare(b.title);
+    }
+    return a.title.localeCompare(b.title);
+  });
+
+  return list;
+}
+
+function render() {
+  const info = sectionInfo[currentSection] || sectionInfo.all;
+
+  document.getElementById("sectionTitle").textContent = info[0];
+  document.getElementById("sectionDescription").textContent = info[1];
+
+  document.querySelectorAll(".navcard").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.section===currentSection
+    );
+  });
+
+  renderFilters();
+
+  const list = filteredResources();
+
+  if (!list.length) {
+    grid.innerHTML =
+      '<div class="empty">No matching resources found. Try another search.</div>';
+    return;
+  }
+
+  grid.innerHTML = list.map(r => {
+    const cover = r.image
+      ? `<img src="${esc(r.image)}" alt="${esc(r.title)}"
+              loading="lazy"
+              onerror="this.style.display='none';this.parentElement.innerHTML='<span class=&quot;placeholder&quot;>${esc(r.icon||"🌿")}</span>'">`
+      : `<span class="placeholder">${esc(r.icon||"🌿")}</span>`;
+
+    return `
+      <article class="card">
+        <div class="cover">${cover}</div>
+        <div class="card-body">
+          <span class="tag">${esc(r.classification||r.category)}</span>
+          <h3>${esc(r.title)}</h3>
+          <p>${esc(r.description)}</p>
+          <div class="card-foot">
+            <span>${esc(r.section.toUpperCase())}</span>
+            <button class="textbtn" data-open="${r.id}">View Details ↗</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  grid.querySelectorAll("[data-open]").forEach(button => {
+    button.addEventListener("click", () => {
+      openRecord(Number(button.dataset.open));
+    });
+  });
+}
+
+/* SPECIMEN DETAIL POPUP */
+
+function openRecord(id) {
+  const r = resources.find(item => item.id===id);
+  if (!r) return;
+
+  document.getElementById("modalTag").textContent =
+    r.classification || r.category;
+
+  document.getElementById("modalTitle").textContent = r.title;
+  document.getElementById("modalDescription").textContent = r.description;
+
+  const fields = [
+    ["Record / date",r.date],
+    ["Classification",r.classification],
+    ["Habitat / topic",r.habitat],
+    ["General location",r.location]
+  ];
+
+  document.getElementById("modalDetails").innerHTML =
+    fields.filter(item => item[1]).map(item => `
+      <dt>${esc(item[0])}</dt>
+      <dd>${esc(item[1])}</dd>
+    `).join("");
+
+  const taxBox = document.getElementById("taxonomyDetails");
+  const collectionBox = document.getElementById("collectionDetails");
+  const charsBox = document.getElementById("characterDetails");
+  const extra = document.getElementById("modalExtra");
+
+  taxBox.innerHTML = "";
+  collectionBox.innerHTML = "";
+  charsBox.innerHTML = "";
+  extra.innerHTML = "";
+
+  const tax = r.taxonomicDetails || {};
+
+  if (Object.keys(tax).length) {
+    const items = [
+      ["Kingdom",tax.kingdom],
+      ["Division / Phylum",tax.division],
+      ["Class",tax.className],
+      ["Order",tax.order],
+      ["Family",tax.family],
+      ["Genus",tax.genus],
+      ["Species",tax.species]
+    ];
+
+    taxBox.innerHTML = `
+      <section class="detail-section">
+        <h3>Taxonomic Details</h3>
+        <div class="tax-grid">
+          ${items.map(([label,value]) => `
+            <div class="tax-item">
+              <strong>${esc(label)}</strong>
+              <span>${esc(value||"Not recorded")}</span>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  if (specimenSections.includes(r.section)) {
+    collectionBox.innerHTML = `
+      <section class="detail-section">
+        <h3>Collection Information</h3>
+        <dl>
+          <dt>Collected by</dt>
+          <dd>${esc(r.collectedBy||"Not recorded")}</dd>
+          <dt>Date of collection</dt>
+          <dd>${esc(r.collectionDate||"Not recorded")}</dd>
+        </dl>
+      </section>
+    `;
+
+    const chars = r.identifyingCharacters || [];
+
+    charsBox.innerHTML = `
+      <section class="detail-section">
+        <h3>Identifying Characters</h3>
+        ${
+          chars.length
+            ? `<ul class="character-list">
+                ${chars.map(c=>`<li>${esc(c)}</li>`).join("")}
+               </ul>`
+            : "<p>Add verified identifying characters.</p>"
+        }
+      </section>
+    `;
+  }
+
+  if (r.image) {
+    const image = document.createElement("img");
+    image.src = r.image;
+    image.alt = r.title;
+    image.className = "detail-photo";
+
+    image.onerror = () => {
+      image.replaceWith(document.createTextNode(
+        "Image not found. Check the filename and images folder."
+      ));
+    };
+
+    extra.appendChild(image);
+  }
+
+  if (r.file) {
+    const link = document.createElement("a");
+    link.href = r.file;
+    link.textContent = "Open attached file";
+    link.target = "_blank";
+    link.rel = "noopener";
+    extra.appendChild(document.createElement("br"));
+    extra.appendChild(link);
+  }
+
+  if (!r.image && !r.file) {
+    extra.textContent =
+      "Edit this resource in the resources array to add an image or file.";
+  }
+
+  document.getElementById("detailModal").classList.add("open");
+}
+
+/* NAVIGATION */
+
+function setSection(section) {
+  currentSection = section;
+  currentFilter = "all";
+  render();
+
+  document.getElementById("collection").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+}
+
+document.querySelectorAll(".navcard").forEach(button => {
+  button.addEventListener("click", () => {
+    setSection(button.dataset.section);
+  });
+});
+
+/* SEARCH */
+
+document.getElementById("searchInput").addEventListener("input", event => {
+  query = event.target.value.trim().toLowerCase();
+  render();
+});
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+  query = document.getElementById("searchInput").value.trim().toLowerCase();
+  render();
+  document.getElementById("collection").scrollIntoView({behavior:"smooth"});
+});
+
+/* SORT */
+
+document.getElementById("sortSelect").addEventListener("change", render);
+
+/* CLOSE POPUP */
+
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("detailModal").classList.remove("open");
+});
+
+document.getElementById("detailModal").addEventListener("click", event => {
+  if (event.target.id==="detailModal") {
+    event.currentTarget.classList.remove("open");
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key==="Escape") {
+    document.getElementById("detailModal").classList.remove("open");
+  }
+});
+
+/* START WEBSITE */
+
+render();
+</script>
+
+</body>
+</html>
